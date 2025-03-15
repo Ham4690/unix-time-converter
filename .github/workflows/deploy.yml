@@ -23,7 +23,7 @@ jobs:
         run: npm run build
 
       - name: Export static files
-        run: npm run export
+        run: npx next export
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
