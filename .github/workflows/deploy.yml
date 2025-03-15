@@ -27,3 +27,11 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./out
+
+      - name: Post deployment URL
+        if: success()
+        run: |
+          OWNER="${GITHUB_REPOSITORY%/*}"
+          REPO="${GITHUB_REPOSITORY#*/}" 
+          echo "## Deployed URL" >> $GITHUB_STEP_SUMMARY
+          echo "https://${OWNER}.github.io/${REPO}/" >> $GITHUB_STEP_SUMMARY
