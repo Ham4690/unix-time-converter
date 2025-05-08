@@ -2,7 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "export",
-  basePath: "/unix-time-converter",
+  // GitHub Pagesにデプロイする場合のみbasePath設定を適用
+  basePath: process.env.NODE_ENV === "production" ? "/unix-time-converter" : "",
   trailingSlash: true,
 };
 

@@ -1,102 +1,207 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  // 現在のUnixタイムと日付を保持するstate
+  const [currentUnixTime, setCurrentUnixTime] = useState<number>(0);
+  const [currentDate, setCurrentDate] = useState<string>("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+  // Unix時間から日付への変換用state
+  const [unixTimeInput, setUnixTimeInput] = useState<string>("");
+  const [dateResult, setDateResult] = useState<string>("");
+
+  // 日付からUnix時間への変換用state
+  const [dateInput, setDateInput] = useState<string>("");
+  const [timeInput, setTimeInput] = useState<string>("");
+  const [unixTimeResult, setUnixTimeResult] = useState<string>("");
+
+  // エラーメッセージ用state
+  const [error, setError] = useState<string>("");
+
+  // 現在の時刻を更新する関数
+  useEffect(() => {
+    const updateCurrentTime = () => {
+      const now = new Date();
+      const unixTime = Math.floor(now.getTime() / 1000);
+      setCurrentUnixTime(unixTime);
+      setCurrentDate(formatDate(now));
+    };
+
+    // 初回実行
+    updateCurrentTime();
+
+    // 1秒ごとに更新
+    const intervalId = setInterval(updateCurrentTime, 1000);
+
+    // クリーンアップ関数
+    return () => clearInterval(intervalId);
+  }, []);
+
+  // 日付をフォーマットする関数
+  const formatDate = (date: Date): string => {
+    return date.toISOString().replace("T", " ").substring(0, 19);
+  };
+
+  // Unixタイムから日付に変換する関数
+  const convertUnixTimeToDate = () => {
+    try {
+      setError("");
+      const unixTime = parseInt(unixTimeInput);
+
+      if (isNaN(unixTime)) {
+        setError("有効な数値を入力してください");
+        return;
+      }
+
+      const date = new Date(unixTime * 1000);
+      setDateResult(formatDate(date));
+    } catch (err) {
+      console.error("Unix時間変換エラー:", err);
+      setError("変換中にエラーが発生しました");
+    }
+  };
+
+  // 日付からUnixタイムに変換する関数
+  const convertDateToUnixTime = () => {
+    try {
+      setError("");
+
+      if (!dateInput) {
+        setError("日付を入力してください");
+        return;
+      }
+
+      const dateTimeString = `${dateInput}${
+        timeInput ? "T" + timeInput : "T00:00:00"
+      }`;
+      const date = new Date(dateTimeString);
+
+      if (isNaN(date.getTime())) {
+        setError("有効な日付と時間を入力してください");
+        return;
+      }
+
+      const unixTime = Math.floor(date.getTime() / 1000);
+      setUnixTimeResult(unixTime.toString());
+    } catch (err) {
+      console.error("日付変換エラー:", err);
+      setError("変換中にエラーが発生しました");
+    }
+  };
+
+  return (
+    <div className="min-h-screen p-6 flex flex-col items-center bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <header className="w-full max-w-4xl mb-8 text-center">
+        <h1 className="text-3xl font-bold mb-2">Unix時間変換ツール</h1>
+        <p className="text-gray-600 dark:text-gray-300">
+          Unix時間と日付を相互に変換するシンプルなツール
+        </p>
+      </header>
+
+      <main className="w-full max-w-4xl flex flex-col gap-8">
+        {/* 現在の時刻表示 */}
+        <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">現在の時刻</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Unix時間:
+              </p>
+              <p className="text-2xl font-mono">{currentUnixTime}</p>
+            </div>
+            <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
+              <p className="text-sm text-gray-500 dark:text-gray-400">日時:</p>
+              <p className="text-2xl font-mono">{currentDate}</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Unix時間から日付への変換 */}
+        <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Unix時間から日付に変換</h2>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
+              <input
+                type="text"
+                value={unixTimeInput}
+                onChange={(e) => setUnixTimeInput(e.target.value)}
+                placeholder="Unix時間を入力 (例: 1620000000)"
+                className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700"
+              />
+              <button
+                onClick={convertUnixTimeToDate}
+                className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                変換
+              </button>
+            </div>
+            {dateResult && (
+              <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  変換結果:
+                </p>
+                <p className="text-xl font-mono">{dateResult}</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* 日付からUnix時間への変換 */}
+        <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">日付からUnix時間に変換</h2>
+          <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="date"
+                value={dateInput}
+                onChange={(e) => setDateInput(e.target.value)}
+                className="p-3 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700"
+              />
+              <input
+                type="time"
+                value={timeInput}
+                onChange={(e) => setTimeInput(e.target.value)}
+                className="p-3 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700"
+              />
+            </div>
+            <button
+              onClick={convertDateToUnixTime}
+              className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              変換
+            </button>
+            {unixTimeResult && (
+              <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  変換結果:
+                </p>
+                <p className="text-xl font-mono">{unixTimeResult}</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* エラーメッセージ */}
+        {error && (
+          <div className="p-4 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-md">
+            {error}
+          </div>
+        )}
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      <footer className="mt-12 text-center text-gray-500 dark:text-gray-400 text-sm">
+        <p>© {new Date().getFullYear()} Unix時間変換ツール</p>
+        <p className="mt-1">
+          <a
+            href="https://github.com/yourusername/unix-time-converter"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-blue-600 dark:hover:text-blue-400"
+          >
+            GitHub
+          </a>
+        </p>
       </footer>
     </div>
   );
