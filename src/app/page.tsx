@@ -6,6 +6,7 @@ export default function Home() {
   // 現在のUnixタイムと日付を保持するstate
   const [currentUnixTime, setCurrentUnixTime] = useState<number>(0);
   const [currentDate, setCurrentDate] = useState<string>("");
+  const [isMilliseconds, setIsMilliseconds] = useState<boolean>(false);
 
   // Unix時間から日付への変換用state
   const [unixTimeInput, setUnixTimeInput] = useState<string>("");
@@ -23,7 +24,9 @@ export default function Home() {
   useEffect(() => {
     const updateCurrentTime = () => {
       const now = new Date();
-      const unixTime = Math.floor(now.getTime() / 1000);
+      const unixTime = isMilliseconds
+        ? now.getTime()
+        : Math.floor(now.getTime() / 1000);
       setCurrentUnixTime(unixTime);
       setCurrentDate(formatDate(now));
     };
@@ -54,7 +57,7 @@ export default function Home() {
         return;
       }
 
-      const date = new Date(unixTime * 1000);
+      const date = new Date(isMilliseconds ? unixTime : unixTime * 1000);
       setDateResult(formatDate(date));
     } catch (err) {
       console.error("Unix時間変換エラー:", err);
@@ -82,8 +85,10 @@ export default function Home() {
         return;
       }
 
-      const unixTime = Math.floor(date.getTime() / 1000);
-      setUnixTimeResult(unixTime.toString());
+      const unixTime = isMilliseconds
+        ? date.getTime()
+        : Math.floor(date.getTime() / 1000);
+      setUnixTimeResult(`${unixTime} ${isMilliseconds ? "ms" : "sec"}`);
     } catch (err) {
       console.error("日付変換エラー:", err);
       setError("変換中にエラーが発生しました");
@@ -105,9 +110,21 @@ export default function Home() {
           <h2 className="text-xl font-semibold mb-4">現在の時刻</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Unix時間:
-              </p>
+              <div className="flex justify-between items-center mb-2">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Unix時間:
+                </p>
+                <button
+                  onClick={() => setIsMilliseconds(!isMilliseconds)}
+                  className={`px-3 py-1 text-xs rounded-md ${
+                    isMilliseconds
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 dark:bg-gray-600"
+                  }`}
+                >
+                  {isMilliseconds ? "ms" : "sec"}
+                </button>
+              </div>
               <p className="text-2xl font-mono">{currentUnixTime}</p>
             </div>
             <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
@@ -126,7 +143,9 @@ export default function Home() {
                 type="text"
                 value={unixTimeInput}
                 onChange={(e) => setUnixTimeInput(e.target.value)}
-                placeholder="Unix時間を入力 (例: 1620000000)"
+                placeholder={`Unix時間を入力 (例: ${
+                  isMilliseconds ? "1620000000000" : "1620000000"
+                })`}
                 className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700"
               />
               <button
