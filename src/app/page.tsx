@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
 import { ThemeToggle } from "@/components/theme-toggle";
 import { CopyButton } from "@/components/copy-button";
+import { UnitSelector } from "@/components/unit-selector";
 
 export default function Home() {
   // 現在のUnixタイムと日付を保持するstate
@@ -110,7 +112,13 @@ export default function Home() {
             Unix時間と日付を相互に変換するシンプルなツール
           </p>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center gap-4">
+          <UnitSelector
+            isMilliseconds={isMilliseconds}
+            onChange={setIsMilliseconds}
+          />
+          <ThemeToggle />
+        </div>
       </header>
 
       <main className="w-full max-w-4xl flex flex-col gap-8">
@@ -121,17 +129,8 @@ export default function Home() {
             <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
               <div className="flex justify-between items-center mb-2">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Unix時間:
+                  Unix時間 ({isMilliseconds ? "ms" : "sec"}):
                 </p>
-                <button
-                  onClick={() => setIsMilliseconds(!isMilliseconds)}
-                  className={`px-3 py-1 text-xs rounded-md ${isMilliseconds
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200 dark:bg-gray-600"
-                    }`}
-                >
-                  {isMilliseconds ? "ms" : "sec"}
-                </button>
               </div>
               <div className="flex items-center gap-2">
                 <p className="text-2xl font-mono">{currentUnixTime}</p>
