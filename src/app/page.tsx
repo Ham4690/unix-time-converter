@@ -126,23 +126,22 @@ export default function Home() {
         <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4">現在の時刻</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
+            <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md relative">
               <div className="flex justify-between items-center mb-2">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   Unix時間 ({isMilliseconds ? "ms" : "sec"}):
                 </p>
               </div>
-              <div className="flex items-center gap-2">
-                <p className="text-2xl font-mono">{currentUnixTime}</p>
-                <CopyButton text={currentUnixTime.toString()} />
-              </div>
+              <p className="text-2xl font-mono">{currentUnixTime}</p>
+              <CopyButton
+                text={currentUnixTime.toString()}
+                className="absolute top-2 right-2"
+              />
             </div>
-            <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
-              <p className="text-sm text-gray-500 dark:text-gray-400">日時:</p>
-              <div className="flex items-center gap-2">
-                <p className="text-2xl font-mono">{currentDate}</p>
-                <CopyButton text={currentDate} />
-              </div>
+            <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md relative">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">日時:</p>
+              <p className="text-2xl font-mono">{currentDate}</p>
+              <CopyButton text={currentDate} className="absolute top-2 right-2" />
             </div>
           </div>
         </section>
@@ -227,14 +226,15 @@ export default function Home() {
               変換
             </button>
             {unixTimeResult && (
-              <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md relative">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                   変換結果:
                 </p>
-                <div className="flex items-center gap-2">
-                  <p className="text-xl font-mono">{unixTimeResult}</p>
-                  <CopyButton text={unixTimeResult.split(" ")[0]} />
-                </div>
+                <p className="text-xl font-mono">{unixTimeResult}</p>
+                <CopyButton
+                  text={unixTimeResult.split(" ")[0]}
+                  className="absolute top-2 right-2"
+                />
               </div>
             )}
           </div>

@@ -4,9 +4,10 @@ import { useState } from "react";
 
 interface CopyButtonProps {
   text: string;
+  className?: string;
 }
 
-export function CopyButton({ text }: CopyButtonProps) {
+export function CopyButton({ text, className = "" }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -23,9 +24,9 @@ export function CopyButton({ text }: CopyButtonProps) {
     <button
       onClick={handleCopy}
       className={`p-2 rounded-md transition-colors ${copied
-          ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-          : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-        }`}
+        ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+        : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+        } ${className}`}
       title="コピー"
       aria-label="クリップボードにコピー"
     >
