@@ -46,6 +46,30 @@ export default function Home() {
     return () => clearInterval(intervalId);
   }, []);
 
+  // 初期値として現在日時設定
+  useEffect(() => {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, "0");
+    const dd = String(now.getDate()).padStart(2, "0");
+    const hh = String(now.getHours()).padStart(2, "0");
+    const min = String(now.getMinutes()).padStart(2, "0");
+
+    setDateInput(`${yyyy}-${mm}-${dd}`);
+    setTimeInput(`${hh}:${min}`);
+  }, []);
+
+  // 単位(ms/sec)変更時に再計算
+  useEffect(() => {
+    if (unixTimeInput) {
+      convertUnixTimeToDate();
+    }
+    if (dateInput) {
+      convertDateToUnixTime();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMilliseconds]);
+
   // 日付をフォーマットする関数
   const formatDate = (date: Date): string => {
     return date.toISOString().replace("T", " ").substring(0, 19);
