@@ -17,6 +17,7 @@ export default function Home() {
   // 日付からUnix時間への変換用state
   const [dateInput, setDateInput] = useState<string>("");
   const [timeInput, setTimeInput] = useState<string>("");
+  const [timezone, setTimezone] = useState<"JST" | "UTC">("JST");
   const [unixTimeResult, setUnixTimeResult] = useState<string>("");
 
   // エラーメッセージ用state
@@ -77,7 +78,11 @@ export default function Home() {
         return;
       }
 
-      const dateTimeString = `${dateInput}${timeInput ? "T" + timeInput : "T00:00:00"
+      const timeStr = timeInput || "00:00:00";
+      // 完全なISO文字列を作成してパースする
+      // UTCの場合: YYYY-MM-DDTHH:mm:ssZ
+      // JSTの場合: YYYY-MM-DDTHH:mm:ss+09:00
+      const dateTimeString = `${dateInput}T${timeStr}${timezone === "UTC" ? "Z" : "+09:00"
         }`;
       const date = new Date(dateTimeString);
 
@@ -178,6 +183,30 @@ export default function Home() {
         <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4">日付からUnix時間に変換</h2>
           <div className="flex flex-col gap-4">
+            <div className="flex gap-4 items-center mb-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="timezone"
+                  value="JST"
+                  checked={timezone === "JST"}
+                  onChange={() => setTimezone("JST")}
+                  className="w-4 h-4 text-blue-600"
+                />
+                <span>JST (UTC+9)</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="timezone"
+                  value="UTC"
+                  checked={timezone === "UTC"}
+                  onChange={() => setTimezone("UTC")}
+                  className="w-4 h-4 text-blue-600"
+                />
+                <span>UTC</span>
+              </label>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
                 type="date"
