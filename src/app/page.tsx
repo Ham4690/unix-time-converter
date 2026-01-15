@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { CopyButton } from "@/components/copy-button";
 
 export default function Home() {
   // 現在のUnixタイムと日付を保持するstate
@@ -127,11 +128,17 @@ export default function Home() {
                   {isMilliseconds ? "ms" : "sec"}
                 </button>
               </div>
-              <p className="text-2xl font-mono">{currentUnixTime}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-2xl font-mono">{currentUnixTime}</p>
+                <CopyButton text={currentUnixTime.toString()} />
+              </div>
             </div>
             <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
               <p className="text-sm text-gray-500 dark:text-gray-400">日時:</p>
-              <p className="text-2xl font-mono">{currentDate}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-2xl font-mono">{currentDate}</p>
+                <CopyButton text={currentDate} />
+              </div>
             </div>
           </div>
         </section>
@@ -196,7 +203,10 @@ export default function Home() {
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   変換結果:
                 </p>
-                <p className="text-xl font-mono">{unixTimeResult}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-xl font-mono">{unixTimeResult}</p>
+                  <CopyButton text={unixTimeResult.split(" ")[0]} />
+                </div>
               </div>
             )}
           </div>
