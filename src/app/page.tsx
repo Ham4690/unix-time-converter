@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
   // 現在のUnixタイムと日付を保持するstate
@@ -75,9 +76,8 @@ export default function Home() {
         return;
       }
 
-      const dateTimeString = `${dateInput}${
-        timeInput ? "T" + timeInput : "T00:00:00"
-      }`;
+      const dateTimeString = `${dateInput}${timeInput ? "T" + timeInput : "T00:00:00"
+        }`;
       const date = new Date(dateTimeString);
 
       if (isNaN(date.getTime())) {
@@ -97,11 +97,14 @@ export default function Home() {
 
   return (
     <div className="min-h-screen p-6 flex flex-col items-center bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <header className="w-full max-w-4xl mb-8 text-center">
-        <h1 className="text-3xl font-bold mb-2">Unix時間変換ツール</h1>
-        <p className="text-gray-600 dark:text-gray-300">
-          Unix時間と日付を相互に変換するシンプルなツール
-        </p>
+      <header className="w-full max-w-4xl mb-8 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Unix時間変換ツール</h1>
+          <p className="text-gray-600 dark:text-gray-300">
+            Unix時間と日付を相互に変換するシンプルなツール
+          </p>
+        </div>
+        <ThemeToggle />
       </header>
 
       <main className="w-full max-w-4xl flex flex-col gap-8">
@@ -116,11 +119,10 @@ export default function Home() {
                 </p>
                 <button
                   onClick={() => setIsMilliseconds(!isMilliseconds)}
-                  className={`px-3 py-1 text-xs rounded-md ${
-                    isMilliseconds
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 dark:bg-gray-600"
-                  }`}
+                  className={`px-3 py-1 text-xs rounded-md ${isMilliseconds
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 dark:bg-gray-600"
+                    }`}
                 >
                   {isMilliseconds ? "ms" : "sec"}
                 </button>
@@ -143,9 +145,8 @@ export default function Home() {
                 type="text"
                 value={unixTimeInput}
                 onChange={(e) => setUnixTimeInput(e.target.value)}
-                placeholder={`Unix時間を入力 (例: ${
-                  isMilliseconds ? "1620000000000" : "1620000000"
-                })`}
+                placeholder={`Unix時間を入力 (例: ${isMilliseconds ? "1620000000000" : "1620000000"
+                  })`}
                 className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700"
               />
               <button
