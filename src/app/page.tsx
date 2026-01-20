@@ -272,11 +272,89 @@ export default function Home() {
         )}
       </main>
 
+      {/* SEO用コンテンツ (mainタグの外、またはfooterの前に追加) */}
+      {/* SEO用コンテンツ (フッター風デザイン) */}
+      <section className="w-full max-w-4xl mt-16 border-t border-gray-200 dark:border-gray-700 pt-10">
+        <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">
+          Unix時間 (Unix Time) とは？
+        </h2>
+        <div className="space-y-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p>
+            Unix時間（ユニックスじかん）とは、協定世界時
+            (UTC) の1970年1月1日午前0時0分0秒からの経過秒数を表す数値です。「エポック秒」とも呼ばれ、
+            多くのコンピュータシステムやプログラミング言語で日時を管理する標準的な形式として利用されています。
+          </p>
+          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-md">
+            <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-1">
+              2038年問題について
+            </h3>
+            <p className="text-xs">
+              32ビットの符号付き整数でUnix時間を管理しているシステムでは、2038年1月19日3時14分7秒（UTC）を過ぎると
+              数値がオーバーフローし、誤動作を起こす可能性があります。これを「2038年問題」と呼びます。
+            </p>
+          </div>
+        </div>
+
+        <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mt-8 mb-4">
+          プログラミング言語別 現在時刻の取得方法
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md border border-gray-100 dark:border-gray-700">
+            <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+              Python
+            </h3>
+            <pre className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 p-2 rounded text-xs overflow-x-auto">
+              <code>{`import time\nprint(int(time.time()))`}</code>
+            </pre>
+          </div>
+          <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md border border-gray-100 dark:border-gray-700">
+            <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+              JavaScript
+            </h3>
+            <pre className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 p-2 rounded text-xs overflow-x-auto">
+              <code>{`Date.now() // ms\nMath.floor(Date.now()/1000)`}</code>
+            </pre>
+          </div>
+          <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md border border-gray-100 dark:border-gray-700">
+            <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+              Java
+            </h3>
+            <pre className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 p-2 rounded text-xs overflow-x-auto">
+              <code>{`System.currentTimeMillis()\n// /1000L for sec`}</code>
+            </pre>
+          </div>
+          <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md border border-gray-100 dark:border-gray-700">
+            <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+              Ruby
+            </h3>
+            <pre className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 p-2 rounded text-xs overflow-x-auto">
+              <code>puts Time.now.to_i</code>
+            </pre>
+          </div>
+          <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md border border-gray-100 dark:border-gray-700">
+            <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+              PHP
+            </h3>
+            <pre className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 p-2 rounded text-xs overflow-x-auto">
+              <code>echo time();</code>
+            </pre>
+          </div>
+          <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md border border-gray-100 dark:border-gray-700">
+            <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+              Go
+            </h3>
+            <pre className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 p-2 rounded text-xs overflow-x-auto">
+              <code>{`import "time"\nfmt.Println(time.Now().Unix())`}</code>
+            </pre>
+          </div>
+        </div>
+      </section>
+
       <footer className="mt-12 text-center text-gray-500 dark:text-gray-400 text-sm">
         <p>© {new Date().getFullYear()} Unix時間変換ツール</p>
         <p className="mt-1">
           <a
-            href="https://github.com/yourusername/unix-time-converter"
+            href="https://github.com/Ham4690/unix-time-converter"
             target="_blank"
             rel="noopener noreferrer"
             className="underline hover:text-blue-600 dark:hover:text-blue-400"
